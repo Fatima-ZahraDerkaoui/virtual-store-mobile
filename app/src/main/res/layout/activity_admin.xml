@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/background_gradient"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin Dashboard"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/adminWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome, Admin"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="40dp"/>
+
+    <!-- BUTTON TO MANAGE USERS OR PRODUCTS -->
+    <Button
+        android:id="@+id/manageProfileBtn"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Modifier mon Profil"
+        android:background="@drawable/button_blue"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Se Déconnecter"
+        android:background="@drawable/button_blue"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

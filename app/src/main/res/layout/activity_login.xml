@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient">
+
+    <!-- TITLE -->
+    <TextView
+        android:text="Welcome Back"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- EMAIL -->
+    <EditText
+        android:id="@+id/emailInput"
+        android:hint="Email"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:background="@drawable/edittext_style"
+        android:padding="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- PASSWORD -->
+    <EditText
+        android:id="@+id/passwordInput"
+        android:hint="Mot de passe"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:inputType="textPassword"
+        android:background="@drawable/edittext_style"
+        android:padding="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- LOGIN BUTTON -->
+    <Button
+        android:id="@+id/loginButton"
+        android:text="Se connecter"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/button_blue"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- FORGOT PASSWORD -->
+    <TextView
+        android:id="@+id/forgotPasswordLink"
+        android:text="Mot de passe oublié ?"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_marginBottom="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- REGISTER -->
+    <TextView
+        android:id="@+id/registerLink"
+        android:text="Créer un compte"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

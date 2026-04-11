@@ -2,6 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- AR Feature -->
+    <uses-feature
+        android:name="android.hardware.camera.ar"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,15 +23,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VirtualStore">
+
+        <!-- ARCore Metadata -->
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="optional" />
+
+        <!-- Activities (Auth & Catalog) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".auth.AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".catalog.CatalogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.LoginActivity"
+            android:exported="false" />
+
+        <!-- Activities (Panier & Historique) -->
+        <activity
+            android:name=".Panier_Historique.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Panier_Historique.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Panier_Historique.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Panier_Historique.OrderDetailsActivity"
+            android:exported="false" />
+
+        <!-- Launcher Activity -->
+        <activity
+            android:name=".auth.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
