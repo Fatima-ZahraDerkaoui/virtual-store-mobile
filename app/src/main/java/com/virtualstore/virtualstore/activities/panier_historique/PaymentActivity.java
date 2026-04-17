@@ -1,7 +1,10 @@
 package com.virtualstore.virtualstore.activities.panier_historique;
 
 import android.os.Bundle;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,12 +15,16 @@ import com.virtualstore.virtualstore.database.OrderDAO;
 import com.virtualstore.virtualstore.model.CartItem;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class PaymentActivity extends AppCompatActivity {
 
-    TextView txtTotal;
-    List<CartItem> list;
+    TextView txtPaymentTotal;
+    EditText edtCardName, edtCardNumber, edtCardExpiry, edtCardCVV;
+    Button btnConfirm;
+
     double total = 0;
 
     @Override
@@ -25,60 +32,60 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Paiement");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Paiement");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        txtPaymentTotal = findViewById(R.id.txtPaymentTotal);
+        edtCardName = findViewById(R.id.edtCardName);
+        edtCardNumber = findViewById(R.id.edtCardNumber);
+        edtCardExpiry = findViewById(R.id.edtCardExpiry);
+        edtCardCVV = findViewById(R.id.edtCardCVV);
+        btnConfirm = findViewById(R.id.btnConfirm);
 
-        txtTotal = findViewById(R.id.txtPaymentTotal);
-        Button btnConfirm = findViewById(R.id.btnConfirm);
+        CartDAO cartDAO = new CartDAO(this);
 
-        CartDAO cart = new CartDAO(this);
-        OrderDAO oder = new OrderDAO(this);
-        list = cart.getAllItems();
+        List<CartItem> cartItems = cartDAO.getAllItems();
 
-        // ✅ FIX TOTAL
-        for (CartItem item : list) {
+        total = 0;
+        for (CartItem item : cartItems) {
             total += item.getPrice() * item.getQuantity();
         }
 
-        txtTotal.setText("Total: " + total + " DH");
+        txtPaymentTotal.setText("Total: " + total + " DH");
 
         btnConfirm.setOnClickListener(v -> {
 
-            if (list.isEmpty()) {
-                Toast.makeText(this, "Panier vide", Toast.LENGTH_SHORT).show();
+            String name = edtCardName.getText().toString().trim();
+            String number = edtCardNumber.getText().toString().trim();
+            String expiry = edtCardExpiry.getText().toString().trim();
+            String cvv = edtCardCVV.getText().toString().trim();
+
+            if (name.isEmpty() || number.isEmpty() || expiry.isEmpty() || cvv.isEmpty()) {
+                Toast.makeText(this, "Remplir tous les champs", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // convertir panier en texte
-            StringBuilder details = new StringBuilder();
-            for (CartItem item : list) {
-                details.append(item.getName())
-                        .append(" x")
-                        .append(item.getQuantity())
-                        .append("\n");
+            if (number.length() != 16) {
+                Toast.makeText(this, "Numéro de carte invalide", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm",
-                    Locale.getDefault()).format(new Date());
+            OrderDAO orderDAO = new OrderDAO(this);
 
-            // ajouter commande
-            int orderId = oder.addOrder(date, total);
-            // ajouter chaque produit
-            for (CartItem item : list) {
-                oder.addOrderLine(orderId, item);
+            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    .format(new Date());
+
+            int orderId = orderDAO.addOrder(date, total);
+
+            for (CartItem item : cartItems) {
+                orderDAO.addOrderLine(orderId, item);
             }
 
-            // vider panier
-            cart.clearCart();
+            cartDAO.clearCart();
 
-            Toast.makeText(this, "Commande confirmée", Toast.LENGTH_LONG).show();
-
+            setResult(RESULT_OK);
             finish();
         });
     }

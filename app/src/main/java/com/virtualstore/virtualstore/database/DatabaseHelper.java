@@ -20,12 +20,13 @@ import java.util.Locale;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "virtualstore.db";
-    public static final int DB_VERSION = 9; // Incremented to 9
+    public static final int DB_VERSION = 10;
 
     public static final String TABLE_USERS = "users";
     public static final String TABLE_PRODUCTS = "products";
     public static final String TABLE_CATEGORIES = "categories";
     public static final String TABLE_ORDERS = "orders";
+    public static final String TABLE_ORDER_LINES = "order_lines";
     public static final String TABLE_CART = "cart";
     public static final String TABLE_AVIS = "avis";
 
@@ -106,6 +107,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_O_TOTAL + " REAL," +
                 COL_O_STATUS + " TEXT," +
                 COL_O_DATE + " TEXT)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ORDER_LINES + " (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "order_id INTEGER," +
+                "product_name TEXT," +
+                "quantity INTEGER," +
+                "unit_price REAL)");
 
         // CART (Table missing before)
         db.execSQL("CREATE TABLE " + TABLE_CART + " (" +
