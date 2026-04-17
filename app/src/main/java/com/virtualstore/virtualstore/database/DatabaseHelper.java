@@ -1,41 +1,66 @@
 package com.virtualstore.virtualstore.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.virtualstore.virtualstore.model.Categorie;
+import com.virtualstore.virtualstore.model.Order;
+import com.virtualstore.virtualstore.model.Product;
+import com.virtualstore.virtualstore.model.User;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    // ================= DATABASE INFO =================
     public static final String DB_NAME = "virtualstore.db";
-    public static final int DB_VERSION = 6; // merged version
+    public static final int DB_VERSION = 9; // Incremented to 9
 
-    // ================= USERS =================
     public static final String TABLE_USERS = "users";
-    public static final String COL_USER_ID = "id";
+    public static final String TABLE_PRODUCTS = "products";
+    public static final String TABLE_CATEGORIES = "categories";
+    public static final String TABLE_ORDERS = "orders";
+    public static final String TABLE_CART = "cart";
+    public static final String TABLE_AVIS = "avis";
+
+    public static final String COL_ID = "id";
+
+    // USERS
     public static final String COL_FIRST_NAME = "first_name";
     public static final String COL_SECOND_NAME = "second_name";
     public static final String COL_LAST_NAME = "last_name";
     public static final String COL_EMAIL = "email";
     public static final String COL_PASSWORD = "password";
     public static final String COL_FAVORITE_COLOR = "favorite_color";
-    public static final String COL_IS_ADMIN = "is_admin";
+    public static final String COL_PHONE = "phone";
+    public static final String COL_ADDRESS = "address";
+    public static final String COL_ROLE = "role";
 
-    // ================= CART =================
-    public static final String TABLE_CART = "cart";
+    // PRODUCTS
+    public static final String COL_P_NAME = "name";
+    public static final String COL_P_PRICE = "price";
+    public static final String COL_P_CATEGORY = "category";
+    public static final String COL_P_DESC = "description";
+    public static final String COL_P_IMAGE = "imageUrl";
+    public static final String COL_P_RATING = "rating";
+    public static final String COL_P_STOCK = "stockQuantity";
 
-    // ================= ORDERS =================
-    public static final String TABLE_ORDERS = "orders";
-    public static final String TABLE_ORDER_LINES = "order_lines";
+    // CATEGORIES
+    public static final String COL_C_NAME = "name";
+    public static final String COL_C_DESC = "description";
 
-    // ================= CATEGORIES =================
-    public static final String TABLE_CATEGORIES = "categories";
-
-    // ================= PRODUCTS =================
-    public static final String TABLE_PRODUCTS = "products";
-
-    // ================= AVIS =================
-    public static final String TABLE_AVIS = "avis";
+    // ORDERS
+    public static final String COL_O_USER_ID = "userId";
+    public static final String COL_O_USER_NAME = "userName";
+    public static final String COL_O_TOTAL = "totalPrice";
+    public static final String COL_O_STATUS = "status";
+    public static final String COL_O_DATE = "date";
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -43,126 +68,240 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // USERS
+        db.execSQL("CREATE TABLE " + TABLE_USERS + " (" +
+                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COL_FIRST_NAME + " TEXT," +
+                COL_SECOND_NAME + " TEXT," +
+                COL_LAST_NAME + " TEXT," +
+                COL_EMAIL + " TEXT UNIQUE," +
+                COL_PASSWORD + " TEXT," +
+                COL_FAVORITE_COLOR + " TEXT," +
+                COL_PHONE + " TEXT," +
+                COL_ADDRESS + " TEXT," +
+                COL_ROLE + " INTEGER)");
 
-        // ================= USERS =================
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USERS + " (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "first_name TEXT NOT NULL," +
-                "second_name TEXT," +
-                "last_name TEXT NOT NULL," +
-                "email TEXT UNIQUE NOT NULL," +
-                "password TEXT NOT NULL," +
-                "favorite_color TEXT," +
-                "is_admin INTEGER DEFAULT 0)");
+        // PRODUCTS
+        db.execSQL("CREATE TABLE " + TABLE_PRODUCTS + " (" +
+                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COL_P_NAME + " TEXT," +
+                COL_P_PRICE + " REAL," +
+                COL_P_CATEGORY + " TEXT," +
+                COL_P_DESC + " TEXT," +
+                COL_P_IMAGE + " TEXT," +
+                COL_P_RATING + " REAL," +
+                COL_P_STOCK + " INTEGER)");
 
-        // ================= CART =================
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_CART + " (" +
-                "id INTEGER PRIMARY KEY," +
+        // CATEGORIES
+        db.execSQL("CREATE TABLE " + TABLE_CATEGORIES + " (" +
+                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COL_C_NAME + " TEXT," +
+                COL_C_DESC + " TEXT)");
+
+        // ORDERS
+        db.execSQL("CREATE TABLE " + TABLE_ORDERS + " (" +
+                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COL_O_USER_ID + " TEXT," +
+                COL_O_USER_NAME + " TEXT," +
+                COL_O_TOTAL + " REAL," +
+                COL_O_STATUS + " TEXT," +
+                COL_O_DATE + " TEXT)");
+
+        // CART (Table missing before)
+        db.execSQL("CREATE TABLE " + TABLE_CART + " (" +
+                "id TEXT PRIMARY KEY," +
                 "name TEXT," +
                 "price REAL," +
                 "quantity INTEGER)");
 
-        // ================= ORDERS =================
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ORDERS + " (" +
-                "order_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "date TEXT," +
-                "total REAL)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ORDER_LINES + " (" +
+        // AVIS (Table missing before)
+        db.execSQL("CREATE TABLE " + TABLE_AVIS + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "order_id INTEGER," +
-                "product_name TEXT," +
-                "quantity INTEGER," +
-                "unit_price REAL)");
-
-        // ================= CATEGORIES =================
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + " (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name TEXT NOT NULL," +
-                "description TEXT)");
-
-        // ================= PRODUCTS =================
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_PRODUCTS + " (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name TEXT NOT NULL," +
-                "description TEXT," +
-                "price REAL NOT NULL," +
-                "category TEXT," +
-                "imageUrl TEXT," +
-                "rating REAL)");
-
-        // ================= AVIS =================
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_AVIS + " (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "productId INTEGER," +
+                "productId TEXT," +
                 "auteur TEXT," +
                 "commentaire TEXT," +
                 "note REAL)");
 
-        // ================= DEFAULT DATA =================
+        insertInitialData(db);
+    }
 
-        // Categories (both versions merged)
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Tous', 'Tous les produits')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Armchairs', 'Fauteuils confortables')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Sofas', 'Canapés modernes')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Beds', 'Lits et literie')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Salon', 'Meubles pour le séjour')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Chambre', 'Tout pour votre repos')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Bureau', 'Espace de travail optimisé')");
-        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Cuisine', 'Ustensiles et meubles de cuisine')");
+    private void insertInitialData(SQLiteDatabase db) {
+        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Meubles', 'Mobilier')");
+        db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (name, description) VALUES ('Décoration', 'Decoration')");
 
-        // Products (MERGED BOTH DATASETS)
+        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, price, category, description, imageUrl, rating, stockQuantity) " +
+                "VALUES ('Chaise Moderne', 150.0, 'Meubles', 'Une belle chaise moderne pour votre salon.', '', 4.5, 10)");
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Chair Elegant', 'Chaise élégante en bois naturel', 190.00, 'Armchairs', 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400', 4.5)");
+        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, price, category, description, imageUrl, rating, stockQuantity) " +
+                "VALUES ('Vase en verre', 45.0, 'Décoration', 'Un vase élégant en verre soufflé.', '', 4.2, 20)");
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Armchair Loft', 'Fauteuil style loft industriel', 250.00, 'Armchairs', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', 4.7)");
+        // Admin default account
+        db.execSQL("INSERT INTO " + TABLE_USERS +
+                " (first_name, last_name, email, password, role) VALUES " +
+                "('Admin', 'User', 'admin@store.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1)");
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Armchair Minimal', 'Fauteuil minimaliste scandinave', 320.00, 'Armchairs', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400', 4.3)");
+        // Sample Avis
+        db.execSQL("INSERT INTO " + TABLE_AVIS + " (productId, auteur, commentaire, note) VALUES ('1', 'Jean', 'Superbe chaise !', 5.0)");
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Chair Nord', 'Chaise nordique légère', 280.00, 'Armchairs', 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=400', 4.6)");
+    // --- CRUD Methods (remained the same) ---
+    public List<Product> getAllProducts() {
+        List<Product> list = new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_PRODUCTS, null);
+        while (c.moveToNext()) {
+            list.add(new Product(
+                    c.getInt(c.getColumnIndexOrThrow(COL_ID)) + "",
+                    c.getString(c.getColumnIndexOrThrow(COL_P_NAME)),
+                    c.getString(c.getColumnIndexOrThrow(COL_P_DESC)),
+                    c.getDouble(c.getColumnIndexOrThrow(COL_P_PRICE)),
+                    c.getString(c.getColumnIndexOrThrow(COL_P_CATEGORY)),
+                    c.getString(c.getColumnIndexOrThrow(COL_P_IMAGE)),
+                    (float) c.getDouble(c.getColumnIndexOrThrow(COL_P_RATING)),
+                    c.getInt(c.getColumnIndexOrThrow(COL_P_STOCK))
+            ));
+        }
+        c.close();
+        return list;
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Modern Loft Sofa', 'Canapé moderne style loft', 250.00, 'Sofas', 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400', 4.8)");
+    public long addProduct(Product p) {
+        ContentValues v = new ContentValues();
+        v.put(COL_P_NAME, p.getName());
+        v.put(COL_P_PRICE, p.getPrice());
+        v.put(COL_P_CATEGORY, p.getCategory());
+        v.put(COL_P_DESC, p.getDescription());
+        v.put(COL_P_IMAGE, p.getImageUrl());
+        v.put(COL_P_RATING, p.getRating());
+        v.put(COL_P_STOCK, p.getStockQuantity());
+        return getWritableDatabase().insert(TABLE_PRODUCTS, null, v);
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Nordic Comfort', 'Chaise Nordic Comfort', 220.00, 'Beds', 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=400', 4.9)");
+    public int updateProduct(Product p) {
+        ContentValues v = new ContentValues();
+        v.put(COL_P_NAME, p.getName());
+        v.put(COL_P_PRICE, p.getPrice());
+        v.put(COL_P_CATEGORY, p.getCategory());
+        v.put(COL_P_DESC, p.getDescription());
+        v.put(COL_P_IMAGE, p.getImageUrl());
+        v.put(COL_P_RATING, p.getRating());
+        v.put(COL_P_STOCK, p.getStockQuantity());
+        return getWritableDatabase().update(TABLE_PRODUCTS, v, COL_ID + "=?", new String[]{p.getId()});
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Chaise Scandinave', 'Chaise élégante en bois et tissu gris.', 450.0, 'Salon', 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c', 4.5)");
+    public int deleteProduct(String id) {
+        return getWritableDatabase().delete(TABLE_PRODUCTS, COL_ID + "=?", new String[]{id});
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Lampe de Bureau LED', 'Lampe avec variateur d''intensité et port USB.', 120.0, 'Bureau', 'https://images.unsplash.com/photo-1534073828943-f801091bb18c', 4.0)");
+    public List<Categorie> getAllCategories() {
+        List<Categorie> list = new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_CATEGORIES, null);
+        while (c.moveToNext()) {
+            list.add(new Categorie(
+                    c.getInt(c.getColumnIndexOrThrow(COL_ID)) + "",
+                    c.getString(c.getColumnIndexOrThrow(COL_C_NAME)),
+                    c.getString(c.getColumnIndexOrThrow(COL_C_DESC))
+            ));
+        }
+        c.close();
+        return list;
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Canapé Velvet Bleu', 'Canapé 3 places grand confort en velours.', 3200.0, 'Salon', 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc', 5.0)");
+    public long addCategory(Categorie c) {
+        ContentValues v = new ContentValues();
+        v.put(COL_C_NAME, c.getName());
+        v.put(COL_C_DESC, c.getDescription());
+        return getWritableDatabase().insert(TABLE_CATEGORIES, null, v);
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Table Basse Marbre', 'Design moderne avec plateau en marbre véritable.', 850.0, 'Salon', 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88', 4.2)");
+    public int updateCategory(Categorie c) {
+        ContentValues v = new ContentValues();
+        v.put(COL_C_NAME, c.getName());
+        v.put(COL_C_DESC, c.getDescription());
+        return getWritableDatabase().update(TABLE_CATEGORIES, v, COL_ID + "=?", new String[]{c.getId()});
+    }
 
-        db.execSQL("INSERT INTO " + TABLE_PRODUCTS + " (name, description, price, category, imageUrl, rating) VALUES " +
-                "('Lit King Size', 'Cadre de lit robuste avec sommier inclus.', 1800.0, 'Chambre', 'https://images.unsplash.com/photo-1505691722718-4684375e797e', 4.8)");
+    public int deleteCategory(String id) {
+        return getWritableDatabase().delete(TABLE_CATEGORIES, COL_ID + "=?", new String[]{id});
+    }
 
-        // Avis (MERGED)
-        db.execSQL("INSERT INTO " + TABLE_AVIS + " (productId, auteur, commentaire, note) VALUES (1, 'Ahmed', 'Très confortable, je recommande !', 5.0)");
-        db.execSQL("INSERT INTO " + TABLE_AVIS + " (productId, auteur, commentaire, note) VALUES (1, 'Sara', 'Belle chaise mais montage un peu difficile.', 4.0)");
-        db.execSQL("INSERT INTO " + TABLE_AVIS + " (productId, auteur, commentaire, note) VALUES (3, 'Karim', 'Un peu cher mais la qualité est là.', 5.0)");
-        db.execSQL("INSERT INTO " + TABLE_AVIS + " (productId, auteur, commentaire, note) VALUES (2, 'Karim', 'Lampe parfaite pour mon bureau.', 4.5)");
+    public List<User> getAllUsers() {
+        List<User> list = new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_USERS, null);
+        while (c.moveToNext()) {
+            list.add(new User(
+                    c.getInt(c.getColumnIndexOrThrow(COL_ID)) + "",
+                    c.getString(c.getColumnIndexOrThrow(COL_FIRST_NAME)),
+                    c.getString(c.getColumnIndexOrThrow(COL_SECOND_NAME)),
+                    c.getString(c.getColumnIndexOrThrow(COL_LAST_NAME)),
+                    c.getString(c.getColumnIndexOrThrow(COL_EMAIL)),
+                    c.getString(c.getColumnIndexOrThrow(COL_PASSWORD)),
+                    c.getString(c.getColumnIndexOrThrow(COL_FAVORITE_COLOR)),
+                    c.getString(c.getColumnIndexOrThrow(COL_PHONE)),
+                    c.getString(c.getColumnIndexOrThrow(COL_ADDRESS)),
+                    c.getInt(c.getColumnIndexOrThrow(COL_ROLE))
+            ));
+        }
+        c.close();
+        return list;
+    }
+
+    public int updateUser(User u) {
+        ContentValues v = new ContentValues();
+        v.put(COL_FIRST_NAME, u.getFirstName());
+        v.put(COL_SECOND_NAME, u.getSecondName());
+        v.put(COL_LAST_NAME, u.getLastName());
+        v.put(COL_EMAIL, u.getEmail());
+        v.put(COL_PASSWORD, u.getPassword());
+        v.put(COL_FAVORITE_COLOR, u.getFavoriteColor());
+        v.put(COL_PHONE, u.getPhone());
+        v.put(COL_ADDRESS, u.getAddress());
+        v.put(COL_ROLE, u.getRole());
+        return getWritableDatabase().update(TABLE_USERS, v, COL_ID + "=?", new String[]{u.getId()});
+    }
+
+    public int deleteUser(String id) {
+        return getWritableDatabase().delete(TABLE_USERS, COL_ID + "=?", new String[]{id});
+    }
+
+    public List<Order> getAllOrders() {
+        List<Order> list = new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_ORDERS, null);
+        while (c.moveToNext()) {
+            list.add(new Order(
+                    c.getInt(c.getColumnIndexOrThrow(COL_ID)) + "",
+                    c.getString(c.getColumnIndexOrThrow(COL_O_USER_ID)),
+                    c.getString(c.getColumnIndexOrThrow(COL_O_USER_NAME)),
+                    c.getDouble(c.getColumnIndexOrThrow(COL_O_TOTAL)),
+                    c.getString(c.getColumnIndexOrThrow(COL_O_STATUS)),
+                    c.getString(c.getColumnIndexOrThrow(COL_O_DATE))
+            ));
+        }
+        c.close();
+        return list;
+    }
+
+    public int updateOrder(Order o) {
+        ContentValues v = new ContentValues();
+        v.put(COL_O_USER_ID, o.getUserId());
+        v.put(COL_O_USER_NAME, o.getUserName());
+        v.put(COL_O_TOTAL, o.getTotalPrice());
+        v.put(COL_O_STATUS, o.getStatus());
+        v.put(COL_O_DATE, o.getDate());
+        return getWritableDatabase().update(TABLE_ORDERS, v, COL_ID + "=?", new String[]{o.getId()});
+    }
+
+    public int deleteOrder(String id) {
+        return getWritableDatabase().delete(TABLE_ORDERS, COL_ID + "=?", new String[]{id});
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AVIS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER_LINES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AVIS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
         onCreate(db);
     }
 }

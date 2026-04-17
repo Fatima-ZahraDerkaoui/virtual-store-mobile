@@ -2,4 +2,16 @@
     <string name="app_name">HFZ Market</string>
     <string name="email_hint">Enter your email</string>
     <string name="reset_password">Reset Password</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Dashboard Strings -->
+    <string name="dashboard_overview">Aperçu du Tableau de Bord</string>
+    <string name="dashboard_products">Produits</string>
+    <string name="dashboard_orders">Commandes</string>
+    <string name="dashboard_users">Utilisateurs</string>
+    <string name="dashboard_revenue">Revenus</string>
+    <string name="btn_export_pdf">Exporter en PDF</string>
+    <string name="btn_export_csv">Exporter en CSV</string>
 </resources>

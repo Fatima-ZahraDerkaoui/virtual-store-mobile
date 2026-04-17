@@ -7,6 +7,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.virtualstore.virtualstore.R;
+import com.virtualstore.virtualstore.activities.admin.AdminDashboardActivity;
 import com.virtualstore.virtualstore.activities.catalog.CatalogActivity;
 import com.virtualstore.virtualstore.database.UserDAO;
 
@@ -42,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
                 int isAdmin = userDAO.getIsAdmin(email);
                 
                 if (isAdmin == 1) {
-                    // Redirect to Admin Space
-                    Intent i = new Intent(this, AdminActivity.class);
+                    // Redirect to the New Admin Dashboard
+                    Intent i = new Intent(this, AdminDashboardActivity.class);
                     i.putExtra("ADMIN_EMAIL", email);
                     startActivity(i);
                 } else {
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                     String name = userDAO.getFirstNameByEmail(email);
                     Intent i = new Intent(this, CatalogActivity.class);
                     i.putExtra("USER_FIRST_NAME", name);
-                    i.putExtra("USER_EMAIL", email); // Passing email for profile
+                    i.putExtra("USER_EMAIL", email);
                     startActivity(i);
                 }
                 finish();

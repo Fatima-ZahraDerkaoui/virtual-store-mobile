@@ -37,7 +37,7 @@ public class DetailProduitFragment extends Fragment {
     public static DetailProduitFragment newInstance(Product product) {
         DetailProduitFragment fragment = new DetailProduitFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PRODUCT_ID, product.getId());
+        args.putString(ARG_PRODUCT_ID, product.getId());
         args.putString(ARG_PRODUCT_NAME, product.getName());
         args.putString(ARG_PRODUCT_DESC, product.getDescription());
         args.putDouble(ARG_PRODUCT_PRICE, product.getPrice());
@@ -58,7 +58,7 @@ public class DetailProduitFragment extends Fragment {
 
         // Récupérer les données
         Bundle args = getArguments();
-        int productId = args.getInt(ARG_PRODUCT_ID);
+        String productId = args.getString(ARG_PRODUCT_ID);
         String name = args.getString(ARG_PRODUCT_NAME);
         String desc = args.getString(ARG_PRODUCT_DESC);
         double price = args.getDouble(ARG_PRODUCT_PRICE);

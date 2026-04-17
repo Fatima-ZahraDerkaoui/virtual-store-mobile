@@ -46,6 +46,16 @@
             android:name=".activities.auth.LoginActivity"
             android:exported="false" />
 
+        <!-- Activities (Admin Part) -->
+        <activity android:name=".activities.admin.AdminDashboardActivity" android:exported="false" />
+        <activity android:name=".activities.admin.ProductListAdminActivity" android:exported="false" />
+        <activity android:name=".activities.admin.CategoryListActivity" android:exported="false" />
+        <activity android:name=".activities.admin.UserListActivity" android:exported="false" />
+        <activity android:name=".activities.admin.OrderListActivity" android:exported="false" />
+        <activity android:name=".activities.admin.OrderDetailActivity" android:exported="false" />
+        <activity android:name=".activities.admin.StockManagementActivity" android:exported="false" />
+        <activity android:name=".activities.admin.AddEditProductActivity" android:exported="false" />
+
         <!-- Activities (Panier & Historique) -->
         <activity
             android:name=".activities.panier_historique.CartActivity"
@@ -69,6 +79,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
     </application>
 

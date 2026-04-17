@@ -1,0 +1,107 @@
+package com.virtualstore.virtualstore.activities.admin;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.virtualstore.virtualstore.R;
+import com.virtualstore.virtualstore.adapter.ProductAdapter;
+import com.virtualstore.virtualstore.database.DataManager;
+import com.virtualstore.virtualstore.model.Categorie;
+import com.virtualstore.virtualstore.model.Product;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductListAdminActivity extends BaseAdminActivity {
+
+    private RecyclerView recyclerView;
+    private FloatingActionButton fabAddProduct;
+    private ProductAdapter adapter;
+    private String currentQuery = "";
+    private String selectedCategory = "All";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_product_list_admin);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Manage Products");
+        }
+
+        recyclerView = findViewById(R.id.recyclerProducts);
+        fabAddProduct = findViewById(R.id.fabAddProduct);
+
+        adapter = new ProductAdapter(
+                DataManager.products,
+                product -> {
+                    Intent intent = new Intent(this, AddEditProductActivity.class);
+                    intent.putExtra("PRODUCT_ID", product.getId());
+                    startActivity(intent);
+                },
+                product -> {
+                    // Quick Action: Delete for admin
+                    DataManager.deleteProduct(product.getId());
+                    applyFilters();
+                }
+        );
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        fabAddProduct.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddEditProductActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    public void onSearchPerformed(String query) {
+        currentQuery = query;
+        applyFilters();
+    }
+
+    @Override
+    public void onFilterClicked() {
+        List<String> categories = new ArrayList<>();
+        categories.add("All");
+        for (Categorie cat : DataManager.categories) {
+            categories.add(cat.getName());
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Filter by Category");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, categories);
+        builder.setAdapter(arrayAdapter, (dialog, which) -> {
+            selectedCategory = categories.get(which);
+            applyFilters();
+        });
+        builder.show();
+    }
+
+    private void applyFilters() {
+        List<Product> filteredList = new ArrayList<>();
+        for (Product p : DataManager.products) {
+            boolean matchesQuery = p.getName() != null && p.getName().toLowerCase().contains(currentQuery.toLowerCase());
+            boolean matchesCategory = selectedCategory.equals("All") || (p.getCategory() != null && p.getCategory().equals(selectedCategory));
+            
+            if (matchesQuery && matchesCategory) {
+                filteredList.add(p);
+            }
+        }
+        adapter.updateList(filteredList);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyFilters();
+    }
+}

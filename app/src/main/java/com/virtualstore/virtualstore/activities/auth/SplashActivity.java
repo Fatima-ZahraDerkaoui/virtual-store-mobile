@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.virtualstore.virtualstore.R;
+import com.virtualstore.virtualstore.database.DataManager;
 import com.virtualstore.virtualstore.database.UserDAO;
 import com.virtualstore.virtualstore.model.User;
 
@@ -27,6 +28,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        // Initialize DataManager to load all products/users for admin part
+        DataManager.init(this);
 
         userDAO = new UserDAO(this);
         splashText = findViewById(R.id.splashText);

@@ -15,17 +15,17 @@ public class AvisDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public List<Avis> getAvisByProduct(int productId) {
+    public List<Avis> getAvisByProduct(String productId) {
         List<Avis> list = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query("avis", null,
-                "productId = ?", new String[]{String.valueOf(productId)},
+                "productId = ?", new String[]{productId},
                 null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 list.add(new Avis(
                         cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("productId")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("productId")),
                         cursor.getString(cursor.getColumnIndexOrThrow("auteur")),
                         cursor.getString(cursor.getColumnIndexOrThrow("commentaire")),
                         cursor.getFloat(cursor.getColumnIndexOrThrow("note"))

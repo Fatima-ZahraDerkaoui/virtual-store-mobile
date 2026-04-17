@@ -4,8 +4,6 @@ plugins {
 
 android {
     namespace = "com.virtualstore.virtualstore"
-
-    // Simplified and stable compileSdk configuration
     compileSdk = 36
 
     defaultConfig {
@@ -14,7 +12,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -33,12 +30,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    // Prevent compression of TensorFlow Lite models
     aaptOptions {
         noCompress("tflite")
     }
 
-    // Required for ARCore native libraries
     packaging {
         jniLibs {
             useLegacyPackaging = true
@@ -47,7 +42,6 @@ android {
 }
 
 dependencies {
-    // AndroidX Core Libraries
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -56,12 +50,15 @@ dependencies {
     // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-    // Glide for image loading
+    // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
-    // ARCore for Augmented Reality
+    // ARCore
     implementation("com.google.ar:core:1.40.0")
+
+    // MPAndroidChart for Admin Dashboard
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     // Testing
     testImplementation(libs.junit)

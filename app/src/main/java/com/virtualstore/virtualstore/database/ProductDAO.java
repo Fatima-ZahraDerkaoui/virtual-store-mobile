@@ -58,13 +58,14 @@ public class ProductDAO {
 
     private Product cursorToProduct(Cursor cursor) {
         return new Product(
-                cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                cursor.getString(cursor.getColumnIndexOrThrow("name")),
-                cursor.getString(cursor.getColumnIndexOrThrow("description")),
-                cursor.getDouble(cursor.getColumnIndexOrThrow("price")),
-                cursor.getString(cursor.getColumnIndexOrThrow("category")),
-                cursor.getString(cursor.getColumnIndexOrThrow("imageUrl")),
-                cursor.getFloat(cursor.getColumnIndexOrThrow("rating"))
+                String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ID))),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_DESC)),
+                cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_PRICE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_CATEGORY)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_IMAGE)),
+                cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_RATING)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_P_STOCK))
         );
     }
 }

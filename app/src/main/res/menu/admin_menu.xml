@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_dashboard"
+        android:title="Dashboard"
+        android:icon="@android:drawable/ic_menu_view"/>
+
+    <item
+        android:id="@+id/menu_products"
+        android:title="Products"
+        android:icon="@android:drawable/ic_menu_agenda"/>
+
+    <item
+        android:id="@+id/menu_categories"
+        android:title="Categories"
+        android:icon="@android:drawable/ic_menu_sort_by_size"/>
+
+    <item
+        android:id="@+id/menu_orders"
+        android:title="Orders"
+        android:icon="@android:drawable/ic_menu_send"/>
+
+    <item
+        android:id="@+id/menu_users"
+        android:title="Users"
+        android:icon="@android:drawable/ic_menu_myplaces"/>
+
+    <item
+        android:id="@+id/menu_stock"
+        android:title="Stock"
+        android:icon="@android:drawable/ic_menu_manage"/>
+
+    <group android:id="@+id/menu_group_logout">
+        <item
+            android:id="@+id/menu_logout"
+            android:title="Log Out"
+            android:icon="@android:drawable/ic_lock_power_off"/>
+    </group>
+
+</menu>

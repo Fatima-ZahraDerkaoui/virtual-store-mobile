@@ -29,17 +29,17 @@ public class CartDAO {
         db.close();
     }
 
-    public void updateQuantity(int id, int qty) {
+    public void updateQuantity(String id, int qty) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("quantity", qty);
-        db.update(DatabaseHelper.TABLE_CART, values, "id=?", new String[]{String.valueOf(id)});
+        db.update(DatabaseHelper.TABLE_CART, values, "id=?", new String[]{id});
         db.close();
     }
 
-    public void deleteItem(int id) {
+    public void deleteItem(String id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(DatabaseHelper.TABLE_CART, "id=?", new String[]{String.valueOf(id)});
+        db.delete(DatabaseHelper.TABLE_CART, "id=?", new String[]{id});
         db.close();
     }
 
@@ -58,7 +58,7 @@ public class CartDAO {
         if (c.moveToFirst()) {
             do {
                 list.add(new CartItem(
-                        c.getInt(c.getColumnIndexOrThrow("id")),
+                        c.getString(c.getColumnIndexOrThrow("id")),
                         c.getString(c.getColumnIndexOrThrow("name")),
                         c.getDouble(c.getColumnIndexOrThrow("price")),
                         c.getInt(c.getColumnIndexOrThrow("quantity"))

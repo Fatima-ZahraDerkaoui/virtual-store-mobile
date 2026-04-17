@@ -25,7 +25,7 @@ public class UserDAO {
         cv.put(DatabaseHelper.COL_EMAIL, user.getEmail());
         cv.put(DatabaseHelper.COL_PASSWORD, user.getPassword());
         cv.put(DatabaseHelper.COL_FAVORITE_COLOR, user.getFavoriteColor());
-        cv.put(DatabaseHelper.COL_IS_ADMIN, user.getIsAdmin());
+        cv.put(DatabaseHelper.COL_ROLE, user.getRole());
 
         long result = db.insert(DatabaseHelper.TABLE_USERS, null, cv);
         db.close();
@@ -37,7 +37,7 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT " + DatabaseHelper.COL_USER_ID +
+                "SELECT " + DatabaseHelper.COL_ID +
                         " FROM " + DatabaseHelper.TABLE_USERS +
                         " WHERE " + DatabaseHelper.COL_EMAIL + "=? AND " +
                         DatabaseHelper.COL_PASSWORD + "=?",
@@ -55,7 +55,7 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT " + DatabaseHelper.COL_USER_ID +
+                "SELECT " + DatabaseHelper.COL_ID +
                         " FROM " + DatabaseHelper.TABLE_USERS +
                         " WHERE " + DatabaseHelper.COL_EMAIL + "=? AND " +
                         DatabaseHelper.COL_SECOND_NAME + "=? AND " +
@@ -75,7 +75,7 @@ public class UserDAO {
         int isAdmin = 0;
 
         Cursor cursor = db.rawQuery(
-                "SELECT " + DatabaseHelper.COL_IS_ADMIN +
+                "SELECT " + DatabaseHelper.COL_ROLE +
                         " FROM " + DatabaseHelper.TABLE_USERS +
                         " WHERE " + DatabaseHelper.COL_EMAIL + "=?",
                 new String[]{email}
@@ -83,7 +83,7 @@ public class UserDAO {
 
         if (cursor.moveToFirst()) {
             isAdmin = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(DatabaseHelper.COL_IS_ADMIN)
+                    cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ROLE)
             );
         }
 
@@ -97,7 +97,7 @@ public class UserDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT " + DatabaseHelper.COL_USER_ID +
+                "SELECT " + DatabaseHelper.COL_ID +
                         " FROM " + DatabaseHelper.TABLE_USERS +
                         " WHERE " + DatabaseHelper.COL_EMAIL + "=?",
                 new String[]{email}
@@ -193,7 +193,7 @@ public class UserDAO {
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EMAIL)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PASSWORD)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_FAVORITE_COLOR)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_IS_ADMIN))
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ROLE))
             );
         }
 

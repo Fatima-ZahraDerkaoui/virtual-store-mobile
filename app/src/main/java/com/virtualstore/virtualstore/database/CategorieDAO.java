@@ -22,7 +22,7 @@ public class CategorieDAO {
         if (cursor.moveToFirst()) {
             do {
                 list.add(new Categorie(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                        String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("id"))),
                         cursor.getString(cursor.getColumnIndexOrThrow("name")),
                         cursor.getString(cursor.getColumnIndexOrThrow("description"))
                 ));

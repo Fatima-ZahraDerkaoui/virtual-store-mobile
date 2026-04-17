@@ -33,50 +33,69 @@ public class CatalogActivity extends AppCompatActivity {
         ImageButton btnLogout = findViewById(R.id.btnLogout);
         ImageButton btnToolbarCart = findViewById(R.id.btnToolbarCart);
 
-        btnHistory.setOnClickListener(v -> {
-            startActivity(new Intent(this, HistoryActivity.class));
-        });
+        if (btnHistory != null) {
+            btnHistory.setOnClickListener(v -> {
+                startActivity(new Intent(this, HistoryActivity.class));
+            });
+        }
 
-        btnProfile.setOnClickListener(v -> {
-            // Get user email from intent (passed from LoginActivity)
-            String email = getIntent().getStringExtra("USER_EMAIL");
-            if (email == null) email = "admin@store.com"; // Fallback for testing
+        if (btnProfile != null) {
+            btnProfile.setOnClickListener(v -> {
+                String email = getIntent().getStringExtra("USER_EMAIL");
+                if (email == null) {
+                    Toast.makeText(this, "Utilisateur non identifié", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            UserDAO userDAO = new UserDAO(this);
-            User user = userDAO.getUserByEmail(email);
+                UserDAO userDAO = new UserDAO(this);
+                User user = userDAO.getUserByEmail(email);
 
-            if (user != null) {
-                String info = "Name: " + user.getFirstName() + " " + user.getLastName() +
-                             "\nEmail: " + user.getEmail() +
-                             "\nColor: " + user.getFavoriteColor();
-                Toast.makeText(this, info, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Profile not found", Toast.LENGTH_SHORT).show();
-            }
-        });
+                if (user != null) {
+                    String info = "Nom: " + user.getFirstName() + " " + user.getLastName() +
+                                 "\nEmail: " + user.getEmail() +
+                                 "\nCouleur: " + user.getFavoriteColor();
+                    Toast.makeText(this, info, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Profil introuvable", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-        btnToolbarCart.setOnClickListener(v -> {
-            startActivity(new Intent(this, CartActivity.class));
-        });
+        if (btnToolbarCart != null) {
+            btnToolbarCart.setOnClickListener(v -> {
+                startActivity(new Intent(this, CartActivity.class));
+            });
+        }
 
-        btnLogout.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        });
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            });
+        }
 
         updateCartCount();
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new CatalogueFragment())
-                    .commit();
+        // Safety check for fragment container
+        if (findViewById(R.id.fragmentContainer) != null) {
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainer, new CatalogueFragment())
+                        .commit();
+            }
+        } else {
+            Toast.makeText(this, "Erreur d'affichage : Conteneur introuvable", Toast.LENGTH_LONG).show();
         }
     }
 
     public void updateCartCount() {
         if (tvToolbarCartCount != null) {
-            int count = cartDAO.getAllItems().size();
-            tvToolbarCartCount.setText(String.valueOf(count));
+            try {
+                int count = cartDAO.getAllItems().size();
+                tvToolbarCartCount.setText(String.valueOf(count));
+            } catch (Exception e) {
+                tvToolbarCartCount.setText("0");
+            }
         }
     }
 
