@@ -1,29 +1,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/fb_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:titleTextColor="@android:color/white"/>
+        android:background="@color/fb_blue"
+        android:titleTextColor="@color/white"/>
 
-    <!-- Liste -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:padding="8dp"/>
 
-    <!-- Total + bouton -->
     <LinearLayout
-        android:padding="12dp"
+        android:padding="16dp"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:background="@color/white"
+        android:elevation="6dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
@@ -31,13 +31,17 @@
             android:text="Total: 0 DH"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@color/fb_text_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/btnCheckout"
             android:text="Passer au paiement"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/fb_blue"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 

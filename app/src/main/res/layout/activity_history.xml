@@ -1,21 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/fb_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Toolbar (OBLIGATOIRE) -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:titleTextColor="@android:color/white"/>
+        android:background="@color/fb_blue"
+        android:titleTextColor="@color/white"/>
 
-    <!-- Liste historique -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHistory"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 </LinearLayout>
