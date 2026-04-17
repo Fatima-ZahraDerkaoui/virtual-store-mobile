@@ -53,7 +53,7 @@ public class HistoryActivity extends AppCompatActivity {
         recycler.setAdapter(new HistoryAdapter(list, this));
     }
 
-    // ✅ bouton retour
+    // bouton retour
     @Override
     public boolean onSupportNavigateUp() {
         finish();
