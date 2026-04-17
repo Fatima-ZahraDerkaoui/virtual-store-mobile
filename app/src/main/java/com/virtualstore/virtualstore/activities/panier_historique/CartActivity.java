@@ -1,4 +1,4 @@
-package com.virtualstore.virtualstore.Panier_Historique;
+package com.virtualstore.virtualstore.activities.panier_historique;
 
 import android.content.Intent;
 import android.os.Bundle;

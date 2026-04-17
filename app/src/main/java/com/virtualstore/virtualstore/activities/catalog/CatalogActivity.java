@@ -1,4 +1,4 @@
-package com.virtualstore.virtualstore.catalog;
+package com.virtualstore.virtualstore.activities.catalog;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,12 +7,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.virtualstore.virtualstore.R;
-import com.virtualstore.virtualstore.Panier_Historique.CartActivity;
-import com.virtualstore.virtualstore.Panier_Historique.HistoryActivity;
-import com.virtualstore.virtualstore.auth.LoginActivity;
+import com.virtualstore.virtualstore.activities.panier_historique.CartActivity;
+import com.virtualstore.virtualstore.activities.panier_historique.HistoryActivity;
+import com.virtualstore.virtualstore.activities.auth.LoginActivity;
 import com.virtualstore.virtualstore.database.CartDAO;
 import com.virtualstore.virtualstore.database.UserDAO;
-import com.virtualstore.virtualstore.fragment.CatalogueFragment;
+import com.virtualstore.virtualstore.activities.fragment.CatalogueFragment;
 import com.virtualstore.virtualstore.model.User;
 
 public class CatalogActivity extends AppCompatActivity {

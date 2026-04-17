@@ -31,38 +31,38 @@
 
         <!-- Activities (Auth & Catalog) -->
         <activity
-            android:name=".auth.AdminActivity"
+            android:name=".activities.auth.AdminActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.ForgotPasswordActivity"
+            android:name=".activities.auth.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.RegisterActivity"
+            android:name=".activities.auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".catalog.CatalogActivity"
+            android:name=".activities.catalog.CatalogActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.LoginActivity"
+            android:name=".activities.auth.LoginActivity"
             android:exported="false" />
 
         <!-- Activities (Panier & Historique) -->
         <activity
-            android:name=".Panier_Historique.CartActivity"
+            android:name=".activities.panier_historique.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".Panier_Historique.PaymentActivity"
+            android:name=".activities.panier_historique.PaymentActivity"
             android:exported="false" />
         <activity
-            android:name=".Panier_Historique.HistoryActivity"
+            android:name=".activities.panier_historique.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".Panier_Historique.OrderDetailsActivity"
+            android:name=".activities.panier_historique.OrderDetailsActivity"
             android:exported="false" />
 
         <!-- Launcher Activity -->
         <activity
-            android:name=".auth.SplashActivity"
+            android:name=".activities.auth.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.virtualstore.virtualstore.auth;
+package com.virtualstore.virtualstore.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;

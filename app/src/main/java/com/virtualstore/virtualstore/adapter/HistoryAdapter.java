@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.virtualstore.virtualstore.R;
-import com.virtualstore.virtualstore.Panier_Historique.OrderDetailsActivity;
+import com.virtualstore.virtualstore.activities.panier_historique.OrderDetailsActivity;
 import com.virtualstore.virtualstore.model.HistoryItem;
 
 import java.util.List;

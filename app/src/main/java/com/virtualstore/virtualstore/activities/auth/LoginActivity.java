@@ -1,4 +1,4 @@
-package com.virtualstore.virtualstore.auth;
+package com.virtualstore.virtualstore.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.virtualstore.virtualstore.R;
-import com.virtualstore.virtualstore.catalog.CatalogActivity;
+import com.virtualstore.virtualstore.activities.catalog.CatalogActivity;
 import com.virtualstore.virtualstore.database.UserDAO;
 
 import java.security.MessageDigest;

@@ -1,4 +1,4 @@
-package com.virtualstore.virtualstore.fragment;
+package com.virtualstore.virtualstore.activities.fragment;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;

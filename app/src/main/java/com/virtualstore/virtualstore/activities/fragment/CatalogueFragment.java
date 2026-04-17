@@ -1,4 +1,4 @@
-package com.virtualstore.virtualstore.fragment;
+package com.virtualstore.virtualstore.activities.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.virtualstore.virtualstore.R;
-import com.virtualstore.virtualstore.Panier_Historique.CartActivity;
+import com.virtualstore.virtualstore.activities.panier_historique.CartActivity;
 import com.virtualstore.virtualstore.adapter.ProductAdapter;
-import com.virtualstore.virtualstore.catalog.CatalogActivity;
+import com.virtualstore.virtualstore.activities.catalog.CatalogActivity;
 import com.virtualstore.virtualstore.database.CartDAO;
 import com.virtualstore.virtualstore.database.CategorieDAO;
 import com.virtualstore.virtualstore.database.ProductDAO;
