@@ -20,7 +20,7 @@ import java.util.Locale;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "virtualstore.db";
-    public static final int DB_VERSION = 10;
+    public static final int DB_VERSION = 11; // Incremented version to refresh data
 
     public static final String TABLE_USERS = "users";
     public static final String TABLE_PRODUCTS = "products";
@@ -115,14 +115,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "quantity INTEGER," +
                 "unit_price REAL)");
 
-        // CART (Table missing before)
+        // CART
         db.execSQL("CREATE TABLE " + TABLE_CART + " (" +
                 "id TEXT PRIMARY KEY," +
                 "name TEXT," +
                 "price REAL," +
                 "quantity INTEGER)");
 
-        // AVIS (Table missing before)
+        // AVIS
         db.execSQL("CREATE TABLE " + TABLE_AVIS + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "productId TEXT," +
@@ -150,9 +150,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Sample Avis
         db.execSQL("INSERT INTO " + TABLE_AVIS + " (productId, auteur, commentaire, note) VALUES ('1', 'Jean', 'Superbe chaise !', 5.0)");
+
+        // Sample Orders for testing
+        db.execSQL("INSERT INTO " + TABLE_ORDERS + " (userId, userName, totalPrice, status, date) VALUES ('1', 'Jean Dupont', 195.0, 'Livré', '2023-10-25')");
+        db.execSQL("INSERT INTO " + TABLE_ORDERS + " (userId, userName, totalPrice, status, date) VALUES ('2', 'Marie Curie', 300.0, 'Payé', '2023-10-26')");
+        db.execSQL("INSERT INTO " + TABLE_ORDERS + " (userId, userName, totalPrice, status, date) VALUES ('1', 'Jean Dupont', 45.0, 'En cours', '2023-10-27')");
     }
 
-    // --- CRUD Methods (remained the same) ---
     public List<Product> getAllProducts() {
         List<Product> list = new ArrayList<>();
         Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_PRODUCTS, null);
@@ -288,6 +292,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public long addOrder(Order o) {
+        ContentValues v = new ContentValues();
+        v.put(COL_O_USER_ID, o.getUserId());
+        v.put(COL_O_USER_NAME, o.getUserName());
+        v.put(COL_O_TOTAL, o.getTotalPrice());
+        v.put(COL_O_STATUS, o.getStatus());
+        v.put(COL_O_DATE, o.getDate());
+        return getWritableDatabase().insert(TABLE_ORDERS, null, v);
+    }
+
     public int updateOrder(Order o) {
         ContentValues v = new ContentValues();
         v.put(COL_O_USER_ID, o.getUserId());
@@ -310,6 +324,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AVIS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CART);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER_LINES);
         onCreate(db);
     }
 }

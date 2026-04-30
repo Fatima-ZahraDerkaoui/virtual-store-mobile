@@ -70,7 +70,6 @@ public class DetailProduitFragment extends Fragment {
         TextView tvPrice = view.findViewById(R.id.tvDetailPrice);
         TextView tvDesc = view.findViewById(R.id.tvDetailDescription);
         RatingBar ratingBar = view.findViewById(R.id.ratingBarDetail);
-        Button btnAR = view.findViewById(R.id.btnTryAR);
         Button btnCart = view.findViewById(R.id.btnAddToCart);
         ImageButton btnBack = view.findViewById(R.id.btnBack);
         ImageView imgProduct = view.findViewById(R.id.imgDetailProduct);
@@ -91,16 +90,6 @@ public class DetailProduitFragment extends Fragment {
         btnBack.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack()
         );
-
-        // Bouton AR
-        btnAR.setOnClickListener(v -> {
-            ARFragment arFragment = new ARFragment();
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, arFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
 
         // Bouton Ajouter au panier (FIXED)
         CartDAO cartDAO = new CartDAO(requireContext());

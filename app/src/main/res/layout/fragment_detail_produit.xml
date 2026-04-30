@@ -99,17 +99,6 @@
                 android:layout_marginTop="6dp"
                 android:lineSpacingExtra="4dp"/>
 
-            <!-- Bouton Try in AR -->
-            <Button
-                android:id="@+id/btnTryAR"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:text="Try in AR"
-                android:textSize="16sp"
-                android:backgroundTint="#2C2C2C"
-                android:textColor="#FFFFFF"/>
-
             <!-- Bouton Ajouter au panier -->
             <Button
                 android:id="@+id/btnAddToCart"
