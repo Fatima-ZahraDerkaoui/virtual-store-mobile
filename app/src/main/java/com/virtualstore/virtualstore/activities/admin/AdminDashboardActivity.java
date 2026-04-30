@@ -38,6 +38,9 @@ public class AdminDashboardActivity extends BaseAdminActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
 
+        // Initialize DataManager to ensure we have the latest data
+        DataManager.init(this);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Admin Dashboard");
         }
@@ -53,6 +56,7 @@ public class AdminDashboardActivity extends BaseAdminActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        DataManager.loadAllData(); // Refresh all data from DB
         updateStats();
         setupPieChart();
     }
@@ -71,7 +75,7 @@ public class AdminDashboardActivity extends BaseAdminActivity {
         for (Order order : DataManager.orders) {
             totalRevenue += order.getTotalPrice();
         }
-        tvRevenue.setText(totalRevenue + " DH");
+        tvRevenue.setText(String.format("%.2f DH", totalRevenue));
     }
 
     private void setupPieChart() {
@@ -87,6 +91,12 @@ public class AdminDashboardActivity extends BaseAdminActivity {
             entries.add(new PieEntry(entry.getValue().floatValue(), entry.getKey()));
         }
 
+        if (entries.isEmpty()) {
+            pieChart.setNoDataText("Aucune donnée disponible");
+            pieChart.invalidate();
+            return;
+        }
+
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         dataSet.setValueTextColor(Color.BLACK);
@@ -95,7 +105,7 @@ public class AdminDashboardActivity extends BaseAdminActivity {
         PieData data = new PieData(dataSet);
         pieChart.setData(data);
         pieChart.getDescription().setEnabled(false);
-        pieChart.setCenterText("Products");
+        pieChart.setCenterText("Produits par Catégorie");
         pieChart.animateY(1000);
         pieChart.invalidate();
     }

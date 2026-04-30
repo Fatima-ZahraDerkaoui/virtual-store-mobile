@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,11 +72,11 @@ public class DetailProduitFragment extends Fragment {
         TextView tvDesc = view.findViewById(R.id.tvDetailDescription);
         RatingBar ratingBar = view.findViewById(R.id.ratingBarDetail);
         Button btnCart = view.findViewById(R.id.btnAddToCart);
-        ImageButton btnBack = view.findViewById(R.id.btnBack);
         ImageView imgProduct = view.findViewById(R.id.imgDetailProduct);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
 
         tvName.setText(name);
-        tvPrice.setText("$" + price);
+        tvPrice.setText(String.format("%.2f DH", price));
         tvDesc.setText(desc);
         ratingBar.setRating(rating);
 
@@ -86,18 +87,18 @@ public class DetailProduitFragment extends Fragment {
                 .error(R.drawable.ic_launcher_background)
                 .into(imgProduct);
 
-        // Bouton retour
-        btnBack.setOnClickListener(v ->
+        // Bouton retour via toolbar navigation icon
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(v -> 
                 requireActivity().getSupportFragmentManager().popBackStack()
-        );
+            );
+        }
 
-        // Bouton Ajouter au panier (FIXED)
+        // Bouton Ajouter au panier
         CartDAO cartDAO = new CartDAO(requireContext());
         btnCart.setOnClickListener(v -> {
             cartDAO.addItem(new CartItem(productId, name, price, 1));
             Toast.makeText(requireContext(), name + " ajouté au panier !", Toast.LENGTH_SHORT).show();
-            
-            // Redirection vers le panier
             startActivity(new Intent(requireActivity(), CartActivity.class));
         });
 

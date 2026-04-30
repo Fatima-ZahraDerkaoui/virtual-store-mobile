@@ -1,9 +1,54 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.VirtualStore" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorPrimaryContainer">@color/primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
+
+        <!-- Background and Surface. -->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/onSurface</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
+
+        <!-- Outline and Error. -->
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/onError</item>
+
+        <!-- Global shape appearance. -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.VirtualStore.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.VirtualStore.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.VirtualStore.Large</item>
     </style>
 
     <style name="Theme.VirtualStore" parent="Base.Theme.VirtualStore" />
+
+    <style name="ShapeAppearance.VirtualStore.Small" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.VirtualStore.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.VirtualStore.Large" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.VirtualStore.BottomNavigation" parent="">
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
 </resources>

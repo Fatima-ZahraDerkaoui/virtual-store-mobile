@@ -19,8 +19,13 @@ import com.virtualstore.virtualstore.database.DataManager;
 import com.virtualstore.virtualstore.model.Categorie;
 import com.virtualstore.virtualstore.model.Product;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AddEditProductActivity extends BaseAdminActivity {
 
@@ -89,7 +94,6 @@ public class AddEditProductActivity extends BaseAdminActivity {
                 etDescription.setText(product.getDescription());
                 if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
                     ivProductPreview.setImageURI(Uri.parse(product.getImageUrl()));
-                    selectedImageUri = Uri.parse(product.getImageUrl());
                 }
                 int categoryIndex = categoryNames.indexOf(product.getCategory());
                 if (categoryIndex != -1) spinnerCategory.setSelection(categoryIndex);
@@ -150,12 +154,49 @@ public class AddEditProductActivity extends BaseAdminActivity {
         return isValid;
     }
 
+    private String saveImageToInternalStorage(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File file = new File(getFilesDir(), UUID.randomUUID().toString() + ".jpg");
+            OutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void saveProduct() {
         String name = etProductName.getText().toString();
         double price = Double.parseDouble(etPrice.getText().toString());
         String category = spinnerCategory.getSelectedItem() != null ? spinnerCategory.getSelectedItem().toString() : "";
         String description = etDescription.getText().toString();
-        String imageUrl = selectedImageUri != null ? selectedImageUri.toString() : "";
+
+        String imageUrl = "";
+        Product existingProduct = null;
+        if (productId != null) {
+            for (Product p : DataManager.products) {
+                if (p.getId().equals(productId)) {
+                    existingProduct = p;
+                    imageUrl = p.getImageUrl();
+                    break;
+                }
+            }
+        }
+
+        if (selectedImageUri != null) {
+            String internalPath = saveImageToInternalStorage(selectedImageUri);
+            if (internalPath != null) {
+                imageUrl = internalPath;
+            }
+        }
 
         if (productId == null) {
             Product newProduct = new Product(
@@ -170,23 +211,14 @@ public class AddEditProductActivity extends BaseAdminActivity {
             );
             DataManager.addProduct(newProduct);
             Toast.makeText(this, "Product Added", Toast.LENGTH_SHORT).show();
-        } else {
-            Product product = null;
-            for (Product p : DataManager.products) {
-                if (p.getId().equals(productId)) {
-                    product = p;
-                    break;
-                }
-            }
-            if (product != null) {
-                product.setName(name);
-                product.setPrice(price);
-                product.setCategory(category);
-                product.setDescription(description);
-                product.setImageUrl(imageUrl);
-                DataManager.updateProduct(product);
-                Toast.makeText(this, "Product Updated", Toast.LENGTH_SHORT).show();
-            }
+        } else if (existingProduct != null) {
+            existingProduct.setName(name);
+            existingProduct.setPrice(price);
+            existingProduct.setCategory(category);
+            existingProduct.setDescription(description);
+            existingProduct.setImageUrl(imageUrl);
+            DataManager.updateProduct(existingProduct);
+            Toast.makeText(this, "Product Updated", Toast.LENGTH_SHORT).show();
         }
         finish();
     }

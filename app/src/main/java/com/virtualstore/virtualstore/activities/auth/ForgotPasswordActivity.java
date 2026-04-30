@@ -30,6 +30,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         EditText confirm = findViewById(R.id.confirmPasswordInput);
 
         LinearLayout resetLayout = findViewById(R.id.resetLayout);
+        TextView backToLogin = findViewById(R.id.backToLogin);
 
         Button verify = findViewById(R.id.verifyButton);
         Button reset = findViewById(R.id.resetButton);
@@ -37,40 +38,51 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetLayout.setVisibility(View.GONE);
 
         verify.setOnClickListener(v -> {
+            String emailStr = email.getText().toString().trim();
+            String secondStr = second.getText().toString().trim();
+            String colorStr = color.getText().toString().trim();
 
-            if (userDAO.checkUserForReset(
-                    email.getText().toString(),
-                    second.getText().toString(),
-                    color.getText().toString())) {
+            if (emailStr.isEmpty() || secondStr.isEmpty() || colorStr.isEmpty()) {
+                Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            if (userDAO.checkUserForReset(emailStr, secondStr, colorStr)) {
                 resetLayout.setVisibility(View.VISIBLE);
+                verify.setVisibility(View.GONE);
             } else {
-                Toast.makeText(this, "Wrong info", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Informations incorrectes", Toast.LENGTH_SHORT).show();
             }
         });
 
         reset.setOnClickListener(v -> {
-
             String pass = newPass.getText().toString();
             String conf = confirm.getText().toString();
 
+            if (pass.isEmpty() || pass.length() < 4) {
+                Toast.makeText(this, "Mot de passe trop court", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (!pass.equals(conf)) {
-                Toast.makeText(this, "Not match", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             String hashed = hash(pass);
-
-            boolean ok = userDAO.updatePassword(
-                    email.getText().toString(),
-                    hashed
-            );
+            boolean ok = userDAO.updatePassword(email.getText().toString().trim(), hashed);
 
             if (ok) {
-                Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Mot de passe mis à jour avec succès", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
             }
+        });
+
+        backToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 

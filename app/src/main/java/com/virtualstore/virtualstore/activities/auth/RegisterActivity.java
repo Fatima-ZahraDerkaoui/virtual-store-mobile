@@ -34,8 +34,16 @@ public class RegisterActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         favoriteColorInput = findViewById(R.id.favoriteColorInput);
-
+        
+        TextView loginLink = findViewById(R.id.loginLink);
         Button registerButton = findViewById(R.id.registerButton);
+
+        // Navigation to Login
+        loginLink.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         // REAL TIME VALIDATION
         emailInput.setOnFocusChangeListener((v, hasFocus) -> {
@@ -57,81 +65,65 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean validateEmail() {
         String email = emailInput.getText().toString().trim();
-
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInput.setError("Email invalide (ex: name@gmail.com)");
-            emailInput.setBackgroundResource(R.drawable.edittext_error);
+            emailInput.setError("Email invalide");
             return false;
         }
-
-        emailInput.setBackgroundResource(R.drawable.edittext_style);
         return true;
     }
 
     private boolean validatePassword() {
         String password = passwordInput.getText().toString().trim();
-
-        if (password.length() < 4 || !password.matches(".*[^a-zA-Z0-9].*")) {
-            passwordInput.setError("Min 4 caractères + 1 caractère spécial");
-            passwordInput.setBackgroundResource(R.drawable.edittext_error);
+        if (password.length() < 4) {
+            passwordInput.setError("Min 4 caractères");
             return false;
         }
-
-        passwordInput.setBackgroundResource(R.drawable.edittext_style);
         return true;
     }
 
     private boolean validateConfirmPassword() {
         String pass = passwordInput.getText().toString().trim();
         String confirm = confirmPasswordInput.getText().toString().trim();
-
         if (!pass.equals(confirm)) {
-            confirmPasswordInput.setError("Passwords do not match");
-            confirmPasswordInput.setBackgroundResource(R.drawable.edittext_error);
+            confirmPasswordInput.setError("Les mots de passe ne correspondent pas");
             return false;
         }
-
-        confirmPasswordInput.setBackgroundResource(R.drawable.edittext_style);
         return true;
     }
 
     // ================= REGISTER =================
 
     private void registerUser() {
-
         String firstName = firstNameInput.getText().toString().trim();
         String secondName = secondNameInput.getText().toString().trim();
         String lastName = lastNameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
-        String confirmPassword = confirmPasswordInput.getText().toString().trim();
         String favoriteColor = favoriteColorInput.getText().toString().trim();
 
-        boolean validEmail = validateEmail();
-        boolean validPass = validatePassword();
-        boolean validConfirm = validateConfirmPassword();
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || secondName.isEmpty()) {
+            Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        if (!validEmail || !validPass || !validConfirm) {
-            Toast.makeText(this, "Please fix errors", Toast.LENGTH_SHORT).show();
+        if (!validateEmail() || !validatePassword() || !validateConfirmPassword()) {
             return;
         }
 
         if (userDAO.checkEmail(email)) {
-            emailInput.setError("Email already exists");
-            emailInput.setBackgroundResource(R.drawable.edittext_error);
+            emailInput.setError("Cet email existe déjà");
             return;
         }
 
         String hashedPassword = hash(password);
-
         User user = new User(firstName, secondName, lastName, email, hashedPassword, favoriteColor);
 
         if (userDAO.insertUser(user)) {
-            Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Compte créé !", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Erreur lors de la création", Toast.LENGTH_SHORT).show();
         }
     }
 

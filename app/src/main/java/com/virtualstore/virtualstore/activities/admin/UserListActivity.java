@@ -32,17 +32,28 @@ public class UserListActivity extends BaseAdminActivity {
         setContentView(R.layout.activity_user_list);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Manage Users");
+            getSupportActionBar().setTitle("Gérer les utilisateurs");
         }
 
         recyclerView = findViewById(R.id.recyclerUsers);
 
+        // Ensure DataManager is initialized and data is loaded
+        DataManager.init(this);
+        DataManager.loadAllData();
+
         adapter = new UserAdapter(
-            DataManager.users,
+            new ArrayList<>(DataManager.users),
             user -> showEditUserDialog(user),
             user -> {
-                DataManager.deleteUser(user.getId());
-                applyFilters();
+                new AlertDialog.Builder(this)
+                    .setTitle("Supprimer l'utilisateur")
+                    .setMessage("Voulez-vous vraiment supprimer cet utilisateur ?")
+                    .setPositiveButton("Oui", (dialog, which) -> {
+                        DataManager.deleteUser(user.getId());
+                        applyFilters();
+                    })
+                    .setNegativeButton("Non", null)
+                    .show();
             }
         );
 
@@ -57,6 +68,7 @@ public class UserListActivity extends BaseAdminActivity {
     }
 
     private void applyFilters() {
+        DataManager.loadAllData();
         List<User> filteredList = new ArrayList<>();
         for (User user : DataManager.users) {
             boolean matches = (user.getFirstName() != null && user.getFirstName().toLowerCase().contains(currentQuery.toLowerCase())) ||
@@ -74,46 +86,48 @@ public class UserListActivity extends BaseAdminActivity {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_edit_user, null);
 
-        EditText etName = dialogView.findViewById(R.id.etEditUserName);
+        EditText etFirstName = dialogView.findViewById(R.id.etEditUserFirstName);
+        EditText etLastName = dialogView.findViewById(R.id.etEditUserLastName);
         EditText etEmail = dialogView.findViewById(R.id.etEditUserEmail);
         EditText etPhone = dialogView.findViewById(R.id.etEditUserPhone);
         EditText etAddress = dialogView.findViewById(R.id.etEditUserAddress);
         Spinner spinnerRole = dialogView.findViewById(R.id.spinnerUserRole);
 
-        // Setup Spinner for Role (0: Client, 1: Admin)
-        String[] roles = {"Client", "Admin"};
-        ArrayAdapter<String> adapterRole = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roles);
-        adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRole.setAdapter(adapterRole);
+        if (etFirstName != null) etFirstName.setText(user.getFirstName());
+        if (etLastName != null) etLastName.setText(user.getLastName());
+        if (etEmail != null) etEmail.setText(user.getEmail());
+        if (etPhone != null) etPhone.setText(user.getPhone());
+        if (etAddress != null) etAddress.setText(user.getAddress());
 
-        // Pre-select current role
-        spinnerRole.setSelection(user.getRole() == 1 ? 1 : 0);
-
-        etName.setText(user.getFirstName() + " " + user.getLastName());
-        etEmail.setText(user.getEmail());
-        etPhone.setText(user.getPhone());
-        etAddress.setText(user.getAddress());
+        if (spinnerRole != null) {
+            String[] roles = {"Client", "Admin"};
+            ArrayAdapter<String> adapterRole = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roles);
+            adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerRole.setAdapter(adapterRole);
+            spinnerRole.setSelection(user.getRole() == 1 ? 1 : 0);
+        }
 
         builder.setView(dialogView);
-        builder.setTitle("Edit User");
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String fullName = etName.getText().toString().trim();
-            String[] parts = fullName.split(" ", 2);
-            user.setFirstName(parts.length > 0 ? parts[0] : "");
-            user.setLastName(parts.length > 1 ? parts[1] : "");
-
-            user.setEmail(etEmail.getText().toString());
-            user.setPhone(etPhone.getText().toString());
-            user.setAddress(etAddress.getText().toString());
-
-            // Update role from spinner selection
-            user.setRole(spinnerRole.getSelectedItemPosition());
+        builder.setTitle("Modifier l'utilisateur");
+        builder.setPositiveButton("Enregistrer", (dialog, which) -> {
+            if (etFirstName != null) user.setFirstName(etFirstName.getText().toString().trim());
+            if (etLastName != null) user.setLastName(etLastName.getText().toString().trim());
+            if (etEmail != null) user.setEmail(etEmail.getText().toString().trim());
+            if (etPhone != null) user.setPhone(etPhone.getText().toString().trim());
+            if (etAddress != null) user.setAddress(etAddress.getText().toString().trim());
+            if (spinnerRole != null) user.setRole(spinnerRole.getSelectedItemPosition());
 
             DataManager.updateUser(user);
             applyFilters();
-            Toast.makeText(this, "User Updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Utilisateur mis à jour", Toast.LENGTH_SHORT).show();
         });
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton("Annuler", null);
         builder.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyFilters();
     }
 }

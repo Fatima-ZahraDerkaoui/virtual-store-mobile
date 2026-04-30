@@ -20,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.virtualstore.virtualstore.R;
 import com.virtualstore.virtualstore.activities.auth.LoginActivity;
+import com.virtualstore.virtualstore.database.DataManager;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaseAdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,6 +28,13 @@ public class BaseAdminActivity extends AppCompatActivity implements NavigationVi
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Ensure DataManager is always initialized when any admin activity starts
+        DataManager.init(this);
+    }
 
     @Override
     public void setContentView(int layoutResID) {
@@ -69,30 +77,29 @@ public class BaseAdminActivity extends AppCompatActivity implements NavigationVi
         if (!(this instanceof AdminDashboardActivity) && !(this instanceof AddEditProductActivity)) {
             getMenuInflater().inflate(R.menu.menu_search, menu);
             MenuItem searchItem = menu.findItem(R.id.action_search);
-            SearchView searchView = (SearchView) searchItem.getActionView();
+            if (searchItem != null) {
+                SearchView searchView = (SearchView) searchItem.getActionView();
+                if (searchView != null) {
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            onSearchPerformed(query != null ? query : "");
+                            return true;
+                        }
 
-            if (searchView != null) {
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        onSearchPerformed(query != null ? query : "");
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        onSearchPerformed(newText != null ? newText : "");
-                        return true;
-                    }
-                });
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            onSearchPerformed(newText != null ? newText : "");
+                            return true;
+                        }
+                    });
+                }
             }
         }
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void onSearchPerformed(String query) {
-        // To be overridden by activities
-    }
+    public void onSearchPerformed(String query) {}
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -103,9 +110,7 @@ public class BaseAdminActivity extends AppCompatActivity implements NavigationVi
         return super.onOptionsItemSelected(item);
     }
 
-    public void onFilterClicked() {
-        // To be overridden by activities
-    }
+    public void onFilterClicked() {}
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -144,7 +149,7 @@ public class BaseAdminActivity extends AppCompatActivity implements NavigationVi
     }
 
     private void performLogout() {
-        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Déconnexion réussie", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

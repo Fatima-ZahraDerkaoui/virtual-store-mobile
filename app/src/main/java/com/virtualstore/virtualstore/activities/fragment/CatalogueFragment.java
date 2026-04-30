@@ -32,7 +32,7 @@ public class CatalogueFragment extends Fragment {
     private ProductDAO productDAO;
     private CategorieDAO categorieDAO;
     private CartDAO cartDAO;
-    private LinearLayout categoryLayout;
+    private ViewGroup categoryLayout; 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +48,6 @@ public class CatalogueFragment extends Fragment {
         cartDAO = new CartDAO(requireContext());
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewProducts);
-        SearchView searchView = view.findViewById(R.id.searchView);
         categoryLayout = view.findViewById(R.id.categoryFilterLayout);
 
         allProducts = productDAO.getAllProducts();
@@ -66,7 +65,6 @@ public class CatalogueFragment extends Fragment {
                 },
 
                 product -> {
-
                     View dialogView = LayoutInflater.from(requireContext())
                             .inflate(R.layout.dialog_add_to_cart, null);
 
@@ -81,13 +79,15 @@ public class CatalogueFragment extends Fragment {
                             colors
                     );
 
-                    spinnerColor.setAdapter(adapterColor);
+                    if (spinnerColor != null) {
+                        spinnerColor.setAdapter(adapterColor);
+                    }
 
                     new AlertDialog.Builder(requireContext())
                             .setTitle(product.getName())
                             .setView(dialogView)
                             .setPositiveButton("Ajouter", (dialog, which) -> {
-
+                                if (edtQty == null) return;
                                 String qtyStr = edtQty.getText().toString();
                                 int qty = qtyStr.isEmpty() ? 1 : Integer.parseInt(qtyStr);
 
@@ -111,35 +111,33 @@ public class CatalogueFragment extends Fragment {
                 }
         );
 
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        recyclerView.setAdapter(adapter);
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+            recyclerView.setAdapter(adapter);
+        }
 
         loadCategories();
+    }
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) { return false; }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    adapter.updateList(new ArrayList<>(allProducts));
-                } else {
-                    adapter.updateList(productDAO.searchProducts(newText));
-                }
-                return true;
-            }
-        });
+    public void filterBySearch(String query) {
+        if (query.isEmpty()) {
+            adapter.updateList(new ArrayList<>(allProducts));
+        } else {
+            adapter.updateList(productDAO.searchProducts(query));
+        }
     }
 
     private void loadCategories() {
+        if (categoryLayout == null) return;
         categoryLayout.removeAllViews();
         List<Categorie> categories = categorieDAO.getAllCategories();
 
         addCategoryChip("Tous");
 
-        for (Categorie cat : categories) {
-            addCategoryChip(cat.getName());
+        if (categories != null) {
+            for (Categorie cat : categories) {
+                addCategoryChip(cat.getName());
+            }
         }
     }
 
@@ -150,9 +148,9 @@ public class CatalogueFragment extends Fragment {
         chip.setTextColor(0xFF1A1A1A);
         chip.setBackgroundResource(R.drawable.chip_background);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
         params.setMargins(8, 8, 8, 8);
@@ -166,22 +164,28 @@ public class CatalogueFragment extends Fragment {
     public void onResume() {
         super.onResume();
         allProducts = productDAO.getAllProducts();
-        adapter.updateList(new ArrayList<>(allProducts));
+        if (adapter != null && allProducts != null) {
+            adapter.updateList(new ArrayList<>(allProducts));
+        }
     }
 
     private void filterByCategory(String category) {
         List<Product> filtered = new ArrayList<>();
 
         if (category.equals("Tous")) {
-            filtered.addAll(allProducts);
+            if (allProducts != null) filtered.addAll(allProducts);
         } else {
-            for (Product p : allProducts) {
-                if (p.getCategory().equalsIgnoreCase(category)) {
-                    filtered.add(p);
+            if (allProducts != null) {
+                for (Product p : allProducts) {
+                    if (p.getCategory() != null && p.getCategory().equalsIgnoreCase(category)) {
+                        filtered.add(p);
+                    }
                 }
             }
         }
 
-        adapter.updateList(filtered);
+        if (adapter != null) {
+            adapter.updateList(filtered);
+        }
     }
 }

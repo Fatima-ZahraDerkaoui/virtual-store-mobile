@@ -1,21 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Primary Colors (Material 3 Blue Theme) -->
+    <color name="primary">#2563EB</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#DBEAFE</color>
+    <color name="onPrimaryContainer">#1E40AF</color>
+
+    <!-- Secondary Colors -->
+    <color name="secondary">#64748B</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="secondaryContainer">#F1F5F9</color>
+    <color name="onSecondaryContainer">#1E293B</color>
+
+    <!-- Background and Surfaces -->
+    <color name="background">#FFFFFF</color>
+    <color name="onBackground">#0F172A</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="onSurface">#0F172A</color>
+    <color name="surfaceVariant">#F8FAFC</color>
+    <color name="onSurfaceVariant">#475569</color>
+
+    <!-- Status and Others -->
+    <color name="error">#EF4444</color>
+    <color name="onError">#FFFFFF</color>
+    <color name="success">#10B981</color>
+    <color name="outline">#E2E8F0</color>
+
+    <!-- Legacy / Compatibility colors -->
     <color name="blue_primary">#2563EB</color>
     <color name="blue_dark">#1E40AF</color>
     <color name="white">#FFFFFF</color>
     <color name="light_gray">#F3F4F6</color>
 
-    <!-- Admin Dashboard Colors -->
+    <!-- FB Style UI Colors -->
     <color name="fb_blue">#1877F2</color>
     <color name="fb_background">#F0F2F5</color>
     <color name="fb_text_primary">#050505</color>
     <color name="fb_text_secondary">#65676B</color>
 
-    <!-- UI Standard Colors -->
-    <color name="primary_blue">#2563EB</color>
+    <!-- Missing Colors from Error Logs and Grep -->
     <color name="surface_white">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="text_hint">#999999</color>
-    <color name="error_red">#B00020</color>
+    <color name="text_hint">#94A3B8</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="primary_blue">#2563EB</color>
+    <color name="error_red">#EF4444</color>
 </resources>

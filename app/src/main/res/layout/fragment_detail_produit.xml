@@ -1,50 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F4EF">
+    android:background="@color/background">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-        <!-- Image produit -->
-        <FrameLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="320dp">
+            android:layout_height="400dp"
+            app:contentScrim="@color/surface"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/imgDetailProduct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"/>
+                android:src="@drawable/ic_launcher_background"
+                app:layout_collapseMode="parallax" />
 
-            <!-- Bouton retour -->
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="16dp"
-                android:background="@drawable/chip_background"
-                android:src="@android:drawable/ic_media_previous"
-                android:padding="8dp"/>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@android:drawable/ic_menu_revert">
 
-        </FrameLayout>
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/chip_background"
+                    android:src="@android:drawable/ic_media_previous"
+                    android:visibility="gone" />
 
-        <!-- Contenu -->
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Nom et Prix -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
@@ -53,81 +69,114 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Product Name"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="#1A1A1A"/>
+                    android:textColor="@color/onBackground"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDetailPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$0.00"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#8B6F47"/>
-
+                    android:text="0.00 DH"
+                    android:textColor="@color/primary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Rating -->
             <RatingBar
                 android:id="@+id/ratingBarDetail"
+                style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
-                android:isIndicator="true"
                 android:layout_marginTop="8dp"
-                style="@style/Widget.AppCompat.RatingBar.Small"/>
+                android:isIndicator="true"
+                android:numStars="5"
+                android:progressTint="@color/primary"
+                android:rating="4.5"
+                android:stepSize="0.5" />
 
-            <!-- Description -->
-            <TextView
+            <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Description"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#1A1A1A"
-                android:layout_marginTop="16dp"/>
+                android:textColor="@color/onBackground"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDetailDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description du produit..."
-                android:textSize="14sp"
-                android:textColor="#757575"
-                android:layout_marginTop="6dp"
-                android:lineSpacingExtra="4dp"/>
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="Detailed description goes here..."
+                android:textColor="@color/onSurfaceVariant"
+                android:textSize="14sp" />
 
-            <!-- Bouton Ajouter au panier -->
-            <Button
-                android:id="@+id/btnAddToCart"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTryAR"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:text="Ajouter au panier"
-                android:textSize="16sp"
-                android:backgroundTint="#8B6F47"
-                android:textColor="#FFFFFF"/>
+                android:layout_marginTop="24dp"
+                android:text="View in your Room (AR)"
+                app:cornerRadius="12dp"
+                app:icon="@android:drawable/ic_menu_camera" />
 
-            <!-- Section Avis -->
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Avis clients"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#1A1A1A"
-                android:layout_marginTop="24dp"/>
-
+                android:layout_marginTop="32dp"
+                android:text="Reviews"
+                android:textColor="@color/onBackground"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewAvis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- Spacer for sticky button -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
 
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="16dp"
+        app:strokeWidth="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddToCart"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Add to Cart"
+                android:textSize="16sp"
+                app:cornerRadius="12dp"
+                app:icon="@android:drawable/ic_menu_add" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

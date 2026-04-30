@@ -32,24 +32,33 @@ public class ProductListAdminActivity extends BaseAdminActivity {
         setContentView(R.layout.activity_product_list_admin);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Manage Products");
+            getSupportActionBar().setTitle("Gérer les produits");
         }
 
         recyclerView = findViewById(R.id.recyclerProducts);
         fabAddProduct = findViewById(R.id.fabAddProduct);
 
         adapter = new ProductAdapter(
-                DataManager.products,
+                new ArrayList<>(DataManager.products),
                 product -> {
+                    // Edit action
                     Intent intent = new Intent(this, AddEditProductActivity.class);
                     intent.putExtra("PRODUCT_ID", product.getId());
                     startActivity(intent);
                 },
                 product -> {
-                    // Quick Action: Delete for admin
-                    DataManager.deleteProduct(product.getId());
-                    applyFilters();
-                }
+                    // Delete action
+                    new AlertDialog.Builder(this)
+                        .setTitle("Supprimer le produit")
+                        .setMessage("Voulez-vous vraiment supprimer ce produit ?")
+                        .setPositiveButton("Oui", (dialog, which) -> {
+                            DataManager.deleteProduct(product.getId());
+                            applyFilters();
+                        })
+                        .setNegativeButton("Non", null)
+                        .show();
+                },
+                true // isAdminMode
         );
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,7 +85,7 @@ public class ProductListAdminActivity extends BaseAdminActivity {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Filter by Category");
+        builder.setTitle("Filtrer par catégorie");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, categories);
         builder.setAdapter(arrayAdapter, (dialog, which) -> {
@@ -87,6 +96,7 @@ public class ProductListAdminActivity extends BaseAdminActivity {
     }
 
     private void applyFilters() {
+        DataManager.loadAllData();
         List<Product> filteredList = new ArrayList<>();
         for (Product p : DataManager.products) {
             boolean matchesQuery = p.getName() != null && p.getName().toLowerCase().contains(currentQuery.toLowerCase());
